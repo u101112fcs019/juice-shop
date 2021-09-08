@@ -23,17 +23,21 @@ jobs:
       #     command: zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
       - checkout
       - run:
-          name: Directory list
-          command: ls -la
+          name: Copy config file
+          command: cp .zap/config.xml /home/zap/.ZAP/config.xml
       - run:
-          name: Upload Authentication Script
-          command: zap-cli --help
-#      - run:
-#          name: Upload context
-#          command: docker cp Gruntfile.js zap:/zap/wrk/amagi-blip.context
-#      - run:
-#          name: Upload Authentication Script
-#          command: docker cp app.json zap:/zap/wrk/agamiLoginScript.js
+          name: Load Authentication Script
+          command: |
+          zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f .zap/loginScript.js
+      - run:
+          name: Load Context
+          command: zap-cli -v context import .zap/scan.context
+      - run:
+          name: Run Quick (baseline) scan
+          command: zap-cli -v quick-scan $DAST_WEBSITE
+      - run:
+          name: Save report
+          command: zap-cli report --output-format html --output hello.html
 #      - run:
 #          name: Upload Authentication Script
 #          command: "docker exec zap zap-cli -v scripts load -n Auth -e 'ECMAScript : Graal.js' -t authentication -f /zap/wrk/amagiLoginScript.js"
