@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Load Authentication Script
           command: |
-          zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f .zap/loginScript.js
+            zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f .zap/loginScript.js
       - run:
           name: Load Context
           command: zap-cli -v context import .zap/scan.context
