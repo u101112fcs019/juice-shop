@@ -12,10 +12,19 @@ jobs:
   dast:
     docker:
       - image: owasp/zap2docker-stable
+    environment:
+      DAST_WEBSITE: "https://qa-cinedigm-upg.amagi.tv/"
+      DAST_FULL_SCAN_ENABLED: "true"
+      DAST_AUTH_USERNAME: “c-naman.rastogi@amagi.com”
+      DAST_AUTH_PASSWORD: “amagi123”
     steps:
       # - run:
       #     name: Start ZAP server
       #     command: zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
+      - checkout
+      - run:
+          name: Directory list
+          command: ls -la
       - run:
           name: Upload Authentication Script
           command: zap-cli --help
