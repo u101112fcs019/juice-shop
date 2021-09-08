@@ -22,13 +22,16 @@ jobs:
     steps:
       - run:
           name: Start ZAP server
-          command: docker run --detach --name zap -u zap -v "$(pwd)/reports":/zap/reports/:rw -i owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
-      - run:
-          name: Upload context
-          command: docker cp Gruntfile.js zap:/zap/wrk/amagi-blip.context
+          command: zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
       - run:
           name: Upload Authentication Script
-          command: docker cp app.json zap:/zap/wrk/agamiLoginScript.js
-      - run:
-          name: Upload Authentication Script
-          command: "docker exec zap zap-cli -v scripts load -n Auth -e 'ECMAScript : Graal.js' -t authentication -f /zap/wrk/amagiLoginScript.js"
+          command: zap-cli --help
+#      - run:
+#          name: Upload context
+#          command: docker cp Gruntfile.js zap:/zap/wrk/amagi-blip.context
+#      - run:
+#          name: Upload Authentication Script
+#          command: docker cp app.json zap:/zap/wrk/agamiLoginScript.js
+#      - run:
+#          name: Upload Authentication Script
+#          command: "docker exec zap zap-cli -v scripts load -n Auth -e 'ECMAScript : Graal.js' -t authentication -f /zap/wrk/amagiLoginScript.js"
