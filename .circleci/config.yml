@@ -26,6 +26,9 @@ jobs:
           name: Copy config file
           command: cp .zap/config.xml /home/zap/.ZAP/config.xml
       - run:
+          name: Start ZAP daemon
+          command: zap-cli -v start
+      - run:
           name: Load Authentication Script
           command: |
             zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f .zap/loginScript.js
