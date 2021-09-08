@@ -24,23 +24,27 @@ jobs:
       - checkout
       - run:
           name: Copy config file
-          command: cp .zap/config.xml /home/zap/.ZAP/config.xml
+          command: cp ~/.zap/config.xml /home/zap/.ZAP/config.xml
       - run:
           name: Start ZAP daemon
-          command: zap-cli -v start
+          command: zap-cli -v start -host 0.0.0.0 -port 8080  -config api.disablekey=true
       - run:
           name: Load Authentication Script
           command: |
-            zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f .zap/loginScript.js
+            zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f ~/.zap/loginScript.js
       - run:
           name: Load Context
-          command: zap-cli -v context import .zap/scan.context
+          command: zap-cli -v context import ~/.zap/scan.context
       - run:
           name: Run Quick (baseline) scan
           command: zap-cli -v quick-scan $DAST_WEBSITE
       - run:
           name: Save report
-          command: zap-cli report --output-format html --output hello.html
+          command: zap-cli report --output-format html --output ~/dastScanReport.html
+      - store_artifacts:
+          path: /zap/zap.log
+      - store_test_results:
+          path: ~/dastScanReport.html
 #      - run:
 #          name: Upload Authentication Script
 #          command: "docker exec zap zap-cli -v scripts load -n Auth -e 'ECMAScript : Graal.js' -t authentication -f /zap/wrk/amagiLoginScript.js"
