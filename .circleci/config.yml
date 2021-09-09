@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Start ZAP daemon
 #          command: zap-x.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
-          command: zap-cli -v start -o "-host 0.0.0.0" -o "-port 8080" -o "-config api.disablekey=true" -o "-config api.addrs.addr.name=.*" -o "-config api.addrs.addr.regex=true"
+          command: zap-cli -v start -o "-config api.disablekey=true" -o "-config api.addrs.addr.name=.*" -o "-config api.addrs.addr.regex=true" -o "-host 0.0.0.0" -o "-port 8090"
       - run: sleep 15
       - run:
           name: Check ZAP daemon status
