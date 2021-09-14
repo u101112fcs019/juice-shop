@@ -11,7 +11,7 @@ echo "Starting ZAP deamon"
 docker exec --detach -i zap zap.sh -daemon -host 0.0.0.0 -port 8080 -configfile /zap/wrk/config.xml  -config api.disablekey=true -addoninstall communityScripts
 
 echo "Waiting for ZAP deamon to run"
-sleep 15
+sleep 30
 
 echo "Verifying ZAP deamon"
 docker exec zap zap-cli -v status
