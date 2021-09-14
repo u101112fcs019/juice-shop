@@ -25,7 +25,10 @@ jobs:
       - run:
           name: Docker pull
           command: docker pull owasp/zap2docker-stable
+      - run: docker cp .zap/config.xml zap:/zap/wrk/config.xml
       - run: docker run --detach --name zap -u zap -v "$(pwd)/reports":/zap/reports/:rw -i owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
+      - run: docker cp .zap/loginScript.js zap:/zap/wrk/loginScript.js
+      - run: docker cp .zap/scan.context zap:/zap/wrk/scan.context
       - run: sleep 10
       - run: docker exec zap zap-cli -v status
       - run: ls -la
@@ -44,20 +47,21 @@ jobs:
       - run:
           name: Load Authentication Script
           command: |
-              docker exec zap zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f .zap/loginScript.js
+              docker exec zap zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f /zap/wrk/loginScript.js
       - run:
           name: Load Context
-          command: docker exec zap zap-cli -v context import .zap/scan.context
+          command: docker exec zap zap-cli -v context import /zap/wrk/scan.context
       - run:
           name: Run Quick (baseline) scan
           command: docker exec zap zap-cli -v quick-scan $DAST_WEBSITE
       - run:
           name: Save report
           command: docker exec zap zap-cli report --output-format xml --output dastScanReport.xml
-      - store_artifacts:
-          path: /zap/zap.log
-      - store_test_results:
-          path: dastScanReport.xml
+      - run: docker exec zap cat dastScanReport.xml
+      # - store_artifacts:
+      #     path: /zap/zap.log
+      # - store_test_results:
+      #     path: dastScanReport.xml
     #  - run:
     #      name: Upload Authentication Script
     #      command: "docker exec zap zap-cli -v scripts load -n Auth -e 'ECMAScript : Graal.js' -t authentication -f /zap/wrk/amagiLoginScript.js"
