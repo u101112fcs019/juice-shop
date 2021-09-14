@@ -28,6 +28,7 @@ jobs:
       - run: docker run --detach --name zap -u zap -v "$(pwd)/reports":/zap/reports/:rw -i owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
       - run: sleep 10
       - run: docker exec zap zap-cli -v status
+      - run: ls -la
 #       - run:
 #           name: Copy config file
 #           command: cp .zap/config.xml /home/zap/.ZAP/config.xml
