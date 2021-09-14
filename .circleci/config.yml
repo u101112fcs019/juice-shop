@@ -11,7 +11,7 @@ workflows:
 jobs:
   dast:
     machine:
-      - image: ubuntu-2004:202008-01
+      image: ubuntu-2004:202008-01
     environment:
       DAST_WEBSITE: "https://qa-cinedigm-upg.amagi.tv/"
       DAST_FULL_SCAN_ENABLED: "true"
