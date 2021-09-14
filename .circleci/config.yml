@@ -22,4 +22,8 @@ jobs:
       - run:
           name: Running ZAP Baseline scan
           command: sh ./.zap/zap-baseline-scan.sh
+      - store_artifacts:
+          path: /zap/zap.log
+      - store_test_results:
+          path: ./.zap/dastScanReport.xml
  
