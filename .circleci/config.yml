@@ -26,10 +26,10 @@ jobs:
           name: Docker pull
           command: docker pull owasp/zap2docker-stable
       - run: docker run --detach --name zap -u zap -v "$(pwd)/reports":/zap/reports/:rw -i owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
+      - run: sleep 10
       - run: docker cp .zap/config.xml zap:/zap/wrk/config.xml
       - run: docker cp .zap/loginScript.js zap:/zap/wrk/loginScript.js
       - run: docker cp .zap/scan.context zap:/zap/wrk/scan.context
-      - run: sleep 10
       - run: docker exec zap zap-cli -v status
       - run: ls -la
 #       - run:
