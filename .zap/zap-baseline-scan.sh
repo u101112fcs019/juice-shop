@@ -10,8 +10,12 @@ docker cp .zap/scan.context zap:/zap/wrk/scan.context
 echo "Starting ZAP deamon"
 docker exec --detach -i zap zap.sh -daemon -host 0.0.0.0 -port 8080 -configfile /zap/wrk/config.xml  -config api.disablekey=true -addoninstall communityScripts
 
-echo "Waiting for ZAP deamon to run"
-sleep 30
+# Wait for it to init
+while ! $(docker exec zap curl -sSf localhost:8080 &> /dev/null)
+do
+	echo "Waiting for proxy to start..."
+	sleep 3
+done
 
 echo "Verifying ZAP deamon"
 docker exec zap zap-cli -v status
