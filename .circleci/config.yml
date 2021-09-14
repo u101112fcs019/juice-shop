@@ -18,51 +18,8 @@ jobs:
       DAST_AUTH_USERNAME: “c-naman.rastogi@amagi.com”
       DAST_AUTH_PASSWORD: “amagi123”
     steps:
-      # - run:
-      #     name: Start ZAP server
-      #     command: zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
       - checkout
       - run:
-          name: Docker pull
-          command: docker pull owasp/zap2docker-stable
-      - run: docker run --detach --name zap -u zap -v "$(pwd)/reports":/zap/reports/:rw -i owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080  -config api.disablekey=true
-      - run: sleep 10
-      - run: docker exec zap mkdir /zap/wrk
-      - run: docker cp .zap/config.xml zap:/zap/wrk/config.xml
-      - run: docker cp .zap/loginScript.js zap:/zap/wrk/loginScript.js
-      - run: docker cp .zap/scan.context zap:/zap/wrk/scan.context
-      - run: docker exec zap zap-cli -v status
-      - run: ls -la
-#       - run:
-#           name: Copy config file
-#           command: cp .zap/config.xml /home/zap/.ZAP/config.xml
-#       - run:
-#           name: Start ZAP daemon
-#           #command: nohup zap-x.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true &
-#           command: zap-cli -v start -o "-config api.disablekey=true" -o "-config api.addrs.addr.name=.*" -o "-config api.addrs.addr.regex=true"
-#       c
-#       - run:
-#           name: Check ZAP daemon status
-# #          command: zap-x.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
-#           command: zap-cli -v status
-      - run:
-          name: Load Authentication Script
-          command: |
-              docker exec zap zap-cli -v scripts load -n Auth -e "ECMAScript : Graal.js" -t authentication -f /zap/wrk/loginScript.js
-      - run:
-          name: Load Context
-          command: docker exec zap zap-cli -v context import /zap/wrk/scan.context
-      - run:
-          name: Run Quick (baseline) scan
-          command: docker exec zap zap-cli -v quick-scan $DAST_WEBSITE
-      - run:
-          name: Save report
-          command: docker exec zap zap-cli report --output-format xml --output dastScanReport.xml
-      - run: docker cp zap:/zap/dastScanReport.xml ./.zap/dastScanReport.xml
-      - store_artifacts:
-          path: ./.zap/dastScanReport.xml
-      - store_test_results:
-          path: ./.zap/dastScanReport.xml
-    #  - run:
-    #      name: Upload Authentication Script
-    #      command: "docker exec zap zap-cli -v scripts load -n Auth -e 'ECMAScript : Graal.js' -t authentication -f /zap/wrk/amagiLoginScript.js"
+          name: Running ZAP Baseline scan
+          command: ./.zap/zap-baseline-scan.sh
+ 
