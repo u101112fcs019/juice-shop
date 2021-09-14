@@ -8,7 +8,7 @@ docker cp .zap/loginScript.js zap:/zap/wrk/loginScript.js
 docker cp .zap/scan.context zap:/zap/wrk/scan.context
 
 echo "Starting ZAP deamon"
-docker exec --detach -i -v zap zap.sh -daemon -host 0.0.0.0 -port 8080 -configfile /zap/wrk/config.xml  -config api.disablekey=true -addoninstall communityScripts
+docker exec --detach -i zap zap.sh -daemon -host 0.0.0.0 -port 8080 -configfile /zap/wrk/config.xml  -config api.disablekey=true -addoninstall communityScripts
 
 echo "Waiting for ZAP deamon to run"
 sleep 15
